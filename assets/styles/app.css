@@ -1,0 +1,56 @@
+body {
+  font-family: sans-serif;
+}
+body .register {
+  background-image: url("/assets/images/fondo.png");
+}
+body .register .login-logo {
+  margin-bottom: 0;
+}
+body .register .img-responsive {
+  display: block;
+  max-width: 100%
+        height: auto;
+}
+body .register .login-box {
+  max-width: 380px;
+  border: solid #7F7F7F;
+  background: white;
+  /*background: #00529c;*/
+  padding: 2em;
+  margin: 3em auto 2em auto;
+}
+body {
+  font-family: sans-serif;
+}
+body .login {
+  background-image: url("/assets/images/fondo.png");
+}
+body .login .login-logo {
+  margin-bottom: 0;
+}
+body .login .img-responsive {
+  display: block;
+  max-width: 100%
+        height: auto;
+}
+body .login .login-box {
+  max-width: 380px;
+  border: solid #7F7F7F;
+  background: white;
+  /*background: #00529c;*/
+  padding: 2em;
+  margin: 3em auto 2em auto;
+}
+.header {
+  background: black;
+  padding: 1em;
+}
+.header p {
+  font-size: 2em;
+  color: white;
+}
+input {
+  color: black;
+}
+
