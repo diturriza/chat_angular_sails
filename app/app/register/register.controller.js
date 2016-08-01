@@ -1,29 +1,31 @@
 (function() {
-    'use strict';
+  'use strict';
 
-    angular
-        .module('app')
-        .controller('registerController', registerController);
+  angular
+    .module('chat')
+    .controller('registerController', registerController);
 
-    registerController.$inject = ['dataService', 'Pagination', '$state', 'usSpinnerService'];
+  registerController.$inject = ['dataService', '$state'];
 
-    /* @ngInject */
-    function registerController(dataService, Pagination, $state, usSpinnerService) {
-        var vm = this;
-        vm.pagination = Pagination.getNew(4);
-        vm.viewSpace = viewSpace;
+  /* @ngInject */
+  function registerController(dataService, $state) {
+    var vm = this;
+    vm.register = register;
+    vm.user = {
+    };
+    activate();
 
-        activate();
-
-        function activate() {
-          console.log('register View activate');
-          usSpinnerService.stop('spinner-1');
-        }
-        function viewSpace(id) {
-          console.log(id);
-          $state.go('register',{
-            spaceId : id
-          });
-        }
+    function activate() {
+      console.log('register View activate');
     }
+
+    function register() {
+      console.log("register function");
+      dataService.register(vm.user).then(function(data) {
+        $state.go('dashboard');
+      },function (err) {
+        console.log(err);
+      });
+    }
+  }
 })();

@@ -1,29 +1,37 @@
 (function() {
-    'use strict';
+  'use strict';
 
-    angular
-        .module('app')
-        .controller('loginController', loginController);
+  angular
+    .module('chat')
+    .controller('loginController', loginController);
 
-    loginController.$inject = ['dataService', 'Pagination', '$state', 'usSpinnerService'];
+  loginController.$inject = ['dataService', '$state'];
 
-    /* @ngInject */
-    function loginController(dataService, Pagination, $state, usSpinnerService) {
-        var vm = this;
-        vm.pagination = Pagination.getNew(4);
-        vm.viewSpace = viewSpace;
+  /* @ngInject */
+  function loginController(dataService, $state) {
+    var vm = this;
+    vm.login = login;
+    vm.logout = logout;
+    vm.user = {
+    };
+    activate();
 
-        activate();
-
-        function activate() {
-          console.log('login View activate');
-          usSpinnerService.stop('spinner-1');
-        }
-        function viewSpace(id) {
-          console.log(id);
-          $state.go('login',{
-            spaceId : id
-          });
-        }
+    function activate() {
+      console.log('login View activate');
     }
+
+    function login() {
+      console.log("login function");
+      dataService.login(vm.user).then(function(data) {
+        console.log("login");
+        $state.go('dashboard');
+      },function (err) {
+        console.log(err);
+      });
+    }
+
+    function logout() {
+      dataService.logout();
+    }
+  }
 })();

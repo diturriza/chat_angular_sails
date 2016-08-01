@@ -5,10 +5,10 @@
     .module('chat')
     .factory('dataService', dataService);
 
-  dataService.$inject = ['$http', 'baseUrl', '$q', '$state'];
+  dataService.$inject = ['$http', 'baseUrl', '$q', '$state', '$rootScope'];
 
   /* @ngInject */
-  function dataService($http, baseUrl, $q, $state) {
+  function dataService($http, baseUrl, $q, $state, $rootScope) {
     var dataService = {
       getAllChat: getAllChat,
       register: register,
@@ -74,17 +74,17 @@
     function logout() {
       $http.defaults.headers.common.Authorization = '';
       localStorage.removeItem('Token');
-      $state.go('register');
+      localStorage.removeItem('User');
+      $state.go('login');
     }
 
     function setAuthenticatedAccount(response) {
       var deferred = $q.defer();
-      console.log(response.data.token);
       var token = 'Bearer ' + response.data.token;
       $http.defaults.headers.common.Authorization = token;
       localStorage.setItem('Token', token);
-      localStorage.setItem('User', response.data.user);
-      $state.go('dashboard');
+      localStorage.setItem('User', JSON.stringify(response.data.user));
+      $state.go('chat');
       return deferred.promise;
     }
 

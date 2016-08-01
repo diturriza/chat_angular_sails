@@ -17,16 +17,20 @@
         return directive;
     }
 
-    headerController.$inject = [];
+    headerController.$inject = ['dataService'];
 
     /* @ngInject */
-    function headerController() {
+    function headerController(dataService) {
         var vm = this;
+        vm.logout = logout;
 
         activate();
 
         function activate() {
           console.log('header Activate');
+        }
+        function logout() {
+          dataService.logout();
         }
     }
 })();

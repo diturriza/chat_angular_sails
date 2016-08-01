@@ -1,9 +1,6 @@
 body {
   font-family: sans-serif;
 }
-body .register {
-  background-image: url("/assets/images/fondo.png");
-}
 body .register .login-logo {
   margin-bottom: 0;
 }
@@ -22,9 +19,6 @@ body .register .login-box {
 }
 body {
   font-family: sans-serif;
-}
-body .login {
-  background-image: url("/assets/images/fondo.png");
 }
 body .login .login-logo {
   margin-bottom: 0;

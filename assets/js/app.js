@@ -87,25 +87,25 @@
   runBlock.$inject = ['$rootScope', '$state', 'baseUrl', '$http'];
 
   function runBlock($rootScope, $state, baseUrl, $http) {
-
-    // io.sails.autoConnect = false;
-    // io.sails.environment = 'development';
-    // io.sails.connect(baseUrl);
-    console.log("url",io.sails.url);
-
-    if (localStorage['Token']) {
-      console.log("estoy donde pienso rey");
-      $http.defaults.headers.common.Authorization = localStorage['Token'];
-      io.socket.on('chat', function(obj) {
-        if (obj.verb === 'created') {
-          console.log(obj);
-          $rootScope.$emit('chatList', obj.data);
-        }
-      });
-    }
-
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       console.log('view change Start ');
+      if (localStorage['Token']) {
+        $http.defaults.headers.common.Authorization = localStorage['Token'];
+        if (typeof io.socket === 'undefined') {
+          io.sails.useCORSRouteToGetCookie = false;
+          io.sails.headers = {
+            Authorization: $http.defaults.headers.common.Authorization
+          }
+          io.socket = io.sails.connect(baseUrl, io.sails.transports, {
+            'Authorization': $http.defaults.headers.common.Authorization
+          });
+          io.socket.on('chat', function(obj) {
+            if (obj.verb === 'created') {
+              $rootScope.$emit('chatList', obj.data);
+            }
+          });
+        }
+      }
     });
 
     $rootScope.$on('$viewContentLoaded', function() {
@@ -116,115 +116,133 @@
 }());
 
 (function() {
+    'use strict';
+
+    angular
+      .module('chat')
+      .controller('chatController', chatController);
+
+    chatController.$inject = ['dataService', '$state', '$http', 'baseUrl', '$scope', '$rootScope'];
+
+    function chatController(dataService, $state, $http, baseUrl, $scope, $rootScope) {
+      /* @ngInject */
+      var vm = this;
+      vm.sendMsg = sendMsg;
+      vm.chatList = [];
+      vm.user = JSON.parse(dataService.getUser());
+      console.log(vm.user);
+      vm.chatUser = vm.user.name;
+      vm.chatMessage = "";
+      vm.logout = logout;
+      activate();
+
+
+      $rootScope.$on('chatList', function(event, data) {
+        console.log(data);
+        vm.chatList.push(data);
+        $scope.$apply();
+      });
+
+
+      function activate() {
+        console.log('chat View activate');
+        getAllChat();
+      }
+
+      function getAllChat() {
+        io.socket.get('/chat/addconv/'+vm.user.id);
+        $http.get(baseUrl + '/chat')
+          .success(function(success_data) {
+            vm.chatList = success_data;
+            // console.log("Desde el ctrl",success_data);
+          });
+      }
+
+      function sendMsg() {
+        io.socket.post('/chat/addconv', {
+            user: vm.user,
+            message: vm.chatMessage},
+            function(resData, jwres) {
+              console.log(resData);
+              console.log(jwres.statusCode);
+            });
+             vm.chatMessage = "";
+        }
+
+        function logout() {
+          dataService.logout();
+        }
+      }
+    })();
+
+(function() {
   'use strict';
 
   angular
     .module('chat')
-    .controller('chatController', chatController);
+    .controller('loginController', loginController);
 
-chatController.$inject = ['dataService', '$state', '$http', 'baseUrl', '$scope', '$rootScope'];
+  loginController.$inject = ['dataService', '$state'];
 
-  function chatController(dataService, $state, $http, baseUrl, $scope, $rootScope) {
   /* @ngInject */
+  function loginController(dataService, $state) {
     var vm = this;
-    vm.sendMsg = sendMsg;
-    vm.chatList = [];
-    vm.user = {};
-    vm.chatUser = "Daniel";
-    vm.chatMessage = "";
+    vm.login = login;
+    vm.logout = logout;
+    vm.user = {
+    };
     activate();
 
-
-    $rootScope.$on('chatList', function (event, data) {
-      console.log(data);
-      vm.chatList.push(data);
-      $scope.$apply();
-    });
-
-
     function activate() {
-      console.log('chat View activate');
-      getAllChat();
+      console.log('login View activate');
     }
 
-    function getAllChat() {
-      io.socket.get('/chat/addconv');
-      $http.get(baseUrl + '/chat')
-        .success(function(success_data) {
-          vm.chatList = success_data;
-          console.log(success_data);
-        });
-    }
-
-    function sendMsg() {
-      console.log(vm.chatMessage);
-      io.socket.post('/chat/addconv/', {
-        user: vm.chatUser,
-        message: vm.chatMessage
+    function login() {
+      console.log("login function");
+      dataService.login(vm.user).then(function(data) {
+        console.log("login");
+        $state.go('dashboard');
+      },function (err) {
+        console.log(err);
       });
-      vm.chatMessage = "";
+    }
+
+    function logout() {
+      dataService.logout();
     }
   }
 })();
 
 (function() {
-    'use strict';
+  'use strict';
 
-    angular
-        .module('app')
-        .controller('loginController', loginController);
+  angular
+    .module('chat')
+    .controller('registerController', registerController);
 
-    loginController.$inject = ['dataService', 'Pagination', '$state', 'usSpinnerService'];
+  registerController.$inject = ['dataService', '$state'];
 
-    /* @ngInject */
-    function loginController(dataService, Pagination, $state, usSpinnerService) {
-        var vm = this;
-        vm.pagination = Pagination.getNew(4);
-        vm.viewSpace = viewSpace;
+  /* @ngInject */
+  function registerController(dataService, $state) {
+    var vm = this;
+    vm.register = register;
+    vm.user = {
+    };
+    activate();
 
-        activate();
-
-        function activate() {
-          console.log('login View activate');
-          usSpinnerService.stop('spinner-1');
-        }
-        function viewSpace(id) {
-          console.log(id);
-          $state.go('login',{
-            spaceId : id
-          });
-        }
+    function activate() {
+      console.log('register View activate');
     }
-})();
 
-(function() {
-    'use strict';
-
-    angular
-        .module('app')
-        .controller('registerController', registerController);
-
-    registerController.$inject = ['dataService', 'Pagination', '$state', 'usSpinnerService'];
-
-    /* @ngInject */
-    function registerController(dataService, Pagination, $state, usSpinnerService) {
-        var vm = this;
-        vm.pagination = Pagination.getNew(4);
-        vm.viewSpace = viewSpace;
-
-        activate();
-
-        function activate() {
-          console.log('register View activate');
-          usSpinnerService.stop('spinner-1');
-        }
-        function viewSpace(id) {
-          console.log(id);
-          $state.go('register',{
-            spaceId : id
-          });
-        }
+    function register() {
+      console.log("register function");
+      dataService.register(vm.user).then(function(data) {
+        $state.go('dashboard');
+      },function (err) {
+        console.log(err);
+      });
     }
+  }
 })();
 
 (function() {
@@ -234,10 +252,10 @@ chatController.$inject = ['dataService', '$state', '$http', 'baseUrl', '$scope',
     .module('chat')
     .factory('dataService', dataService);
 
-  dataService.$inject = ['$http', 'baseUrl', '$q', '$state'];
+  dataService.$inject = ['$http', 'baseUrl', '$q', '$state', '$rootScope'];
 
   /* @ngInject */
-  function dataService($http, baseUrl, $q, $state) {
+  function dataService($http, baseUrl, $q, $state, $rootScope) {
     var dataService = {
       getAllChat: getAllChat,
       register: register,
@@ -303,17 +321,17 @@ chatController.$inject = ['dataService', '$state', '$http', 'baseUrl', '$scope',
     function logout() {
       $http.defaults.headers.common.Authorization = '';
       localStorage.removeItem('Token');
-      $state.go('register');
+      localStorage.removeItem('User');
+      $state.go('login');
     }
 
     function setAuthenticatedAccount(response) {
       var deferred = $q.defer();
-      console.log(response.data.token);
       var token = 'Bearer ' + response.data.token;
       $http.defaults.headers.common.Authorization = token;
       localStorage.setItem('Token', token);
-      localStorage.setItem('User', response.data.user);
-      $state.go('dashboard');
+      localStorage.setItem('User', JSON.stringify(response.data.user));
+      $state.go('chat');
       return deferred.promise;
     }
 
@@ -373,16 +391,20 @@ chatController.$inject = ['dataService', '$state', '$http', 'baseUrl', '$scope',
         return directive;
     }
 
-    headerController.$inject = [];
+    headerController.$inject = ['dataService'];
 
     /* @ngInject */
-    function headerController() {
+    function headerController(dataService) {
         var vm = this;
+        vm.logout = logout;
 
         activate();
 
         function activate() {
           console.log('header Activate');
+        }
+        function logout() {
+          dataService.logout();
         }
     }
 })();
