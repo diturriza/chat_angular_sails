@@ -55,14 +55,17 @@ var vendorScripts = [
   BaseVendors + 'angular-ui-router/release/angular-ui-router.min.js',
   BaseVendors + 'bootstrap/dist/js/bootstrap.min.js',
   BaseVendors + 'angular-breadcrumb/dist/angular-breadcrumb.min.js',
-  BaseVendors + 'angular-toastr/dist/angular-toastr.tpls.js',
+  BaseVendors + 'angular-toastr/dist/angular-toastr.min.js',
   BaseVendors + 'angular-animate/angular-animate.js',
   BaseVendors + 'angular-messages/angular-messages.js',
-  BaseVendors + 'bootstrap/dist/js/bootstrap.min.js'
+  BaseVendors + 'bootstrap/dist/js/bootstrap.min.js',
+  BaseVendors + 'spin.js/spin.min.js',
+  BaseVendors + 'angular-spinner/angular-spinner.min.js'
 ];
 var vendorStyles = [
   BaseVendors + 'bootstrap/dist/css/bootstrap.min.css',
   BaseVendors + 'font-awesome/css/font-awesome.min.css'
+  BaseVendors + 'angular-toastr/dist/angular-toastr.min.css',
 ];
 
 var vendorFonts = [

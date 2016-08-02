@@ -71,10 +71,19 @@
       return !!(localStorage.getItem('Token')) ? localStorage.getItem('User') : null;
     }
 
-    function logout() {
+    function logout(userId) {
       $http.defaults.headers.common.Authorization = '';
       localStorage.removeItem('Token');
       localStorage.removeItem('User');
+      io.socket.delete('chat/leave/'+userId, {}, function(data, jwres) {
+        //console.log(data);
+      });
+      io.socket.off('chat', function(obj) {
+        //console.log(obj);
+      });
+      io.socket.off('online', function(obj) {
+        //console.log(obj);
+      });
       $state.go('login');
     }
 

@@ -5,10 +5,10 @@
     .module('chat')
     .controller('loginController', loginController);
 
-  loginController.$inject = ['dataService', '$state'];
+  loginController.$inject = ['dataService', '$state', 'usSpinnerService'];
 
   /* @ngInject */
-  function loginController(dataService, $state) {
+  function loginController(dataService, $state, usSpinnerService) {
     var vm = this;
     vm.login = login;
     vm.logout = logout;
@@ -17,16 +17,17 @@
     activate();
 
     function activate() {
-      console.log('login View activate');
+      usSpinnerService.stop('spinnerGeneric');
+      //console.log('login View activate');
     }
 
     function login() {
-      console.log("login function");
+      //console.log("login function");
       dataService.login(vm.user).then(function(data) {
-        console.log("login");
+        //console.log("login");
         $state.go('dashboard');
       },function (err) {
-        console.log(err);
+        //console.log(err);
       });
     }
 

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -8,39 +8,57 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Hi {{ vm.chatUser }}, Welcome to Cool Chat</a>
+      <a class="navbar-brand" href="#">Hi
+        {{ vm.chatUser }}, Welcome to Cool Chat</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-        <li ng-class="$root.currentState === 'chat' ? 'active': ''"><a ui-sref="chat">Chat <span class="sr-only">(current)</span></a></li>
-        <li ng-class="$root.currentState === 'users' ? 'active': ''" ><a href="#">Users Online</a></li>
-        <li><a href="" ng-click="vm.logout()">Logout</a></li>
+        <li ng-class="$root.currentState === 'chat' ? 'active': ''">
+          <a ui-sref="chat">Chat
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+        <li>
+          <a href="" ng-click="vm.logout()">Logout</a>
+        </li>
       </ul>
     </div>
     <!-- /.navbar-collapse -->
   </div>
   <!-- /.container-fluid -->
 </nav>
-<div class="col-xs-12" style="padding:100px">
-  <table class="table">
-    <tr class="chat_message" ng-repeat="chat in vm.chatList">
-      <td class="col-md-12 td_class">
-        <strong>{{ chat.user.name || vm.chatUser}}
-          :
-        </strong>
-        {{ chat.message }}</td>
-    </tr>
-  </table>
-</div>
-<div class="navbar navbar-inverse navbar-fixed-bottom">
-  <div class="row">
-    <form class="form_chat">
-      <div class="col-md-6 col-md-offset-2 col-xs-12">
-        <input type="text" ng-model="vm.chatMessage" class="form-control" placeholder="TypeYourMessageHere">
-      </div>
-      <button class="btn btn-default col-lg-2 col-md-2 col-xs-12" ng-click="vm.sendMsg()">Send</button>
-    </form>
+<div class="conversation">
+
+  <div class="col-xs-2">
+    <div class="online">
+      <h4>Users Online</h4>
+      <ul>
+        <li ng-repeat="user in vm.onlineUsers">{{user.name}}</li>
+      </ul>
+    </div>
   </div>
+  <div class="col-xs-10">
+    <table class="table">
+      <tr class="chat_message" ng-repeat="chat in vm.chatList ">
+        <td class="col-md-12 td_class">
+          <strong>{{ chat.user.name || chat.user}}
+            :
+          </strong>
+          {{ chat.message }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="row">
+      <form class="form_chat form-inline">
+        <div class="col-md-6 col-md-offset-2 col-xs-8 col-xs-offset-1">
+          <input type="text" ng-model="vm.chatMessage" class="form-control" placeholder="TypeYourMessageHere">
+        </div>
+        <button class="btn btn-success btn-circle" ng-click="vm.sendMsg()"><i class="fa fa-paper-plane-o" aria-hidden="true"></i>Send</button>
+      </form>
+    </div>
+  </div>
+
 </div>

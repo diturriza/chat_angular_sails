@@ -8,6 +8,7 @@
       'ncy-angular-breadcrumb',
       'ngAnimate',
       'ngMessages',
-      'toastr'
+      'toastr',
+      'angularSpinner'
     ]);
 })();

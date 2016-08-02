@@ -2,11 +2,24 @@
 
   angular.module('chat').run(runBlock);
 
-  runBlock.$inject = ['$rootScope', '$state', 'baseUrl', '$http'];
+  runBlock.$inject = ['$rootScope', '$state', 'baseUrl', '$http', 'usSpinnerService'];
 
-  function runBlock($rootScope, $state, baseUrl, $http) {
+  function runBlock($rootScope, $state, baseUrl, $http, usSpinnerService) {
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-      console.log('view change Start ');
+      usSpinnerService.spin('spinnerGeneric');
+      //console.log('view change Start');
+      $rootScope.currentState = toState.name;
+
+      if (!toState.authenticate && !_.isEmpty(localStorage.getItem('Token'))) {
+        event.preventDefault();
+        $state.go('chat');
+        $rootScope.currentState = 'chat';
+      }
+      if (toState.authenticate && _.isEmpty(localStorage.getItem('Token'))) {
+        event.preventDefault();
+        $state.go('login');
+        $rootScope.currentState = 'login';
+      }
       if (localStorage['Token']) {
         $http.defaults.headers.common.Authorization = localStorage['Token'];
         if (typeof io.socket === 'undefined') {
@@ -27,7 +40,8 @@
     });
 
     $rootScope.$on('$viewContentLoaded', function() {
-      console.log('view Loaded');
+      //console.log('view Loaded');
+
     });
   }
 

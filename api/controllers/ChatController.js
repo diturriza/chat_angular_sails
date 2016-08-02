@@ -11,25 +11,59 @@ module.exports = {
     if (req.isSocket && req.method === 'POST') {
       Chat.create(dataFromClient)
         .exec(function(err, dataFromClient) {
-          console.log(dataFromClient);
-          Chat.publishCreate({
-            id: dataFromClient.id,
-            message: dataFromClient.message,
-            user: dataFromClient.user
-          });
+          //console.log(dataFromClient);
+          Users.findOne({
+              id: dataFromClient.user
+            })
+            .exec(function(err, user) {
+              if (err) return res.serverError();
+              if (_.isEmpty(user)) {
+                return res.notFound();
+              } else {
+                Chat.publishCreate({
+                  id: dataFromClient.id,
+                  message: dataFromClient.message,
+                  user: user.name
+                });
+              }
+            });
         });
     } else if (req.isSocket) {
-      Chat.watch(req.socket);
       var userId = req.param('id');
-      // Get the session from the request
-      var session = req.session;
-      // Create the session.users hash if it doesn't exist already
-      session.users = session.users || {};
-      var socketId = req.socket.id;
-      session.users[socketId] = userId;
-      console.log(session.users);
-      console.log('User subscribed to ' + socketId);
+      Users.findOne({
+          id: userId
+        })
+        .exec(function(err, user) {
+          if (err) return res.serverError();
+          if (_.isEmpty(user)) {
+            return res.notFound();
+          } else {
+            delete user.encryptedPassword;
+            var socketId = req.socket.id;
+            user.socketId = socketId;
+            user.save();
+            Chat.watch(req.socket);
+            Online.watch(req.socket);
+            Online.publishCreate(user);
+            sails.sockets.user = user;
+            //console.log(sails.sockets.user);
+            sails.config.online.users.push(userId);
+            //console.log(sails.config.online);
+            //console.log('User subscribed to ' + socketId);
+          }
+        });
     }
+  },
+
+  leave: function(req, res) {
+    var userId = req.param('userId');
+    Chat.unWatch(req.socket);
+    Online.unWatch(req.socket);
+    Online.publishDestroy(userId);
+    var socketId = req.socket.id;
+    sails.config.online.users.push(userId);
+    //console.log(sails.config.online);
+    //console.log('User unsubscribed to ' + socketId);
   },
 
   find: function(req, res) {
@@ -37,7 +71,6 @@ module.exports = {
       .populate('user')
       .exec(function chats(err, chatList) {
         if (err) return res.serverError(err);
-        console.log(chatList);
         if (_.isEmpty(chatList)) {
           return res.notFound();
         } else {

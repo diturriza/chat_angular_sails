@@ -1,0 +1,45 @@
+.navbar-default {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  border-radius: 0;
+  background-color: @blue;
+  border-color: @yellow !important;
+  a {
+    color: white !important;
+    &:hover {
+      color: @yellow !important;
+    }
+  }
+  .active {
+    a {
+      background-color: @yellow!important;
+      color: black !important;
+    }
+  }
+  .navbar-toggle {
+    border-color: @yellow !important;
+    &:focus,
+    &:hover {
+      background-color: @yellow !important;
+      border-color: @blue !important;
+      .icon-bar {
+        background-color: @blue!important;
+      }
+    }
+    .icon-bar {
+      background-color: @yellow!important;
+    }
+  }
+}
+.conversation {
+  padding-top: 50px;
+  .online {
+    padding: 20px;
+  }
+  .navbar-inverse {
+    background-color: @blue;
+    border-color: @blue !important;
+    .row {
+      padding-top: 10px;
+    }
+  }
+}

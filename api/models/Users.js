@@ -21,6 +21,10 @@ module.exports = {
       type: 'string',
       required: 'true'
     },
+    status: {
+      type: 'boolean',
+      defaultsTo: true
+    },
 
     encryptedPassword: {
       type: 'string'

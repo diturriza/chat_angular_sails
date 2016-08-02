@@ -1,48 +1,63 @@
+.navbar-default {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  border-radius: 0;
+  background-color: #2196F3;
+  border-color: #FFFF00 !important;
+}
+.navbar-default a {
+  color: white !important;
+}
+.navbar-default a:hover {
+  color: #FFFF00 !important;
+}
+.navbar-default .active a {
+  background-color: #FFFF00 !important;
+  color: black !important;
+}
+.navbar-default .navbar-toggle {
+  border-color: #FFFF00 !important;
+}
+.navbar-default .navbar-toggle:focus,
+.navbar-default .navbar-toggle:hover {
+  background-color: #FFFF00 !important;
+  border-color: #2196F3 !important;
+}
+.navbar-default .navbar-toggle:focus .icon-bar,
+.navbar-default .navbar-toggle:hover .icon-bar {
+  background-color: #2196F3 !important;
+}
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #FFFF00 !important;
+}
+.conversation {
+  padding-top: 50px;
+}
+.conversation .online {
+  padding: 20px;
+}
+.conversation .navbar-inverse {
+  background-color: #2196F3;
+  border-color: #2196F3 !important;
+}
+.conversation .navbar-inverse .row {
+  padding-top: 10px;
+}
 body {
-  font-family: sans-serif;
+  background-color: #eee !important;
+  overflow-y: scroll;
 }
-body .register .login-logo {
-  margin-bottom: 0;
-}
-body .register .img-responsive {
-  display: block;
-  max-width: 100%
-        height: auto;
-}
-body .register .login-box {
+.login-box {
   max-width: 380px;
-  border: solid #7F7F7F;
-  background: white;
-  /*background: #00529c;*/
+  background-color: white;
+  border-radius: 2x;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   padding: 2em;
   margin: 3em auto 2em auto;
 }
-body {
-  font-family: sans-serif;
-}
-body .login .login-logo {
-  margin-bottom: 0;
-}
-body .login .img-responsive {
-  display: block;
-  max-width: 100%
-        height: auto;
-}
-body .login .login-box {
-  max-width: 380px;
-  border: solid #7F7F7F;
-  background: white;
-  /*background: #00529c;*/
-  padding: 2em;
-  margin: 3em auto 2em auto;
-}
-.header {
-  background: black;
-  padding: 1em;
-}
-.header p {
-  font-size: 2em;
-  color: white;
+.title {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 20pt;
 }
 input {
   color: black;
