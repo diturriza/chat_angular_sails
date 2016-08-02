@@ -16,6 +16,12 @@ Para probar el código debes clonar el repositorio, instalar las dependencias y 
 `npm start`
 Este ultimo comando, activa `sails lift` y levanta el servidor web de sails http://localhost:1337/.
 
+
+Cabe destacar que...
+-------------
+Debes entrar al archivo `app/app/app.constants.js` y modificar la constante baseUrl por la ip de tu maquina y así poder probar con varias maquinas.
+
+
 ----------
 
 
